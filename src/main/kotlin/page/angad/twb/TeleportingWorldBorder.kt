@@ -1,4 +1,4 @@
-package page.angad
+package page.angad.twb
 
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents

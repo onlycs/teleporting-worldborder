@@ -17,7 +17,7 @@
 	"entrypoints": {
 		"main": [
 			{
-				"value": "page.angad.TeleportingWorldBorder",
+				"value": "page.angad.twb.TeleportingWorldBorder",
 				"adapter": "kotlin"
 			}
 		]
