@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.event.player.UseBlockCallback
+import net.fabricmc.fabric.api.event.player.UseItemCallback
 import net.minecraft.ChatFormatting.BOLD
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -17,10 +19,13 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.datafix.DataFixTypes
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.CropBlock
 import net.minecraft.world.level.border.WorldBorder
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.level.saveddata.SavedData
@@ -230,6 +235,18 @@ object TeleportingWorldBorder : ModInitializer {
 					.then(Commands.literal("check").executes { expansion.check(it) })
 					.then(Commands.literal("expand").executes { expansion.expand(it) })
 			)
+		}
+
+		UseBlockCallback.EVENT.register { player, world, hand, res ->
+			val stack = player.getItemInHand(hand)
+			val block = world.getBlockState(res.blockPos).block
+
+			if (stack.`is`(Items.BONE_MEAL) && block == Blocks.WHEAT) {
+				player.sendSystemMessage(Component.literal("Bonemeal no longer works on wheat"))
+				InteractionResult.FAIL
+			} else {
+				InteractionResult.PASS
+			}
 		}
 	}
 }
